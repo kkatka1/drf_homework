@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from materials.models import Course, Lesson
+from config.settings import AUTH_USER_MODEL
+from materials.models import Course, Lesson
 
 
 class User(AbstractUser):
@@ -35,3 +38,51 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+
+
+class Payment(models.Model):
+    PAYMENT_METHODS = [
+        ("cash", "Наличные"),
+        ("transfer", "Перевод на счет"),
+    ]
+
+    user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Пользователь",
+        related_name="payments",
+    )
+    payment_date = models.DateField(verbose_name="Дата оплаты")
+
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.SET_NULL,
+        verbose_name="Курс",
+        blank=True,
+        null=True,
+        related_name="payments",
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.SET_NULL,
+        verbose_name="Урок",
+        blank=True,
+        null=True,
+        related_name="payments",
+    )
+    amount = models.PositiveIntegerField(verbose_name="Сумма оплаты")
+
+    payment_method = models.CharField(
+        max_length=150, choices=PAYMENT_METHODS, verbose_name="Способ оплаты"
+    )
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
+        ordering = ["-payment_date"]
+
+    def __str__(self):
+        return f"{self.user.email} - {self.amount} руб."
