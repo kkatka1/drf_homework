@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.db import models
+
 
 class Course(models.Model):
     title = models.CharField(
@@ -14,6 +16,14 @@ class Course(models.Model):
     )
     description = models.TextField(
         verbose_name="Описание курса", help_text="укажите описание курса"
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца курса",
     )
 
     class Meta:
@@ -51,6 +61,14 @@ class Lesson(models.Model):
         blank=True,
         null=True,
         help_text="укажите ссылку на видео материал",
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца урока",
     )
 
     class Meta:
