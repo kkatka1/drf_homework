@@ -65,6 +65,7 @@ class LessonsTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertGreater(len(response.data), 0)
 
+
 class SubscriptionViewTests(APITestCase):
 
     def setUp(self):
