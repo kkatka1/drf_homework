@@ -77,6 +77,19 @@ class Payment(models.Model):
     payment_method = models.CharField(
         max_length=150, choices=PAYMENT_METHODS, verbose_name="Способ оплаты"
     )
+    session_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="ID сессии",
+    )
+
+    link = models.URLField(
+        max_length=400,
+        blank=True,
+        null=True,
+        verbose_name="Ссылка на оплату",
+    )
 
     class Meta:
         verbose_name = "Платеж"
@@ -85,5 +98,3 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.amount} руб."
-
-

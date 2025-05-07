@@ -1,7 +1,13 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from django.utils.decorators import method_decorator
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,12 +18,18 @@ from materials.paginations import CustomPagination
 from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModer, IsOwner
 
+@method_decorator(
+    name="list",
+    decorator=swagger_auto_schema(
+        operation_description="description from swagger_auto_schema via method_decorator"
+    ),
+)
+
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     pagination_class = CustomPagination
-
 
     def perform_create(self, serializer):
         """Привязка курса к авторизованному пользователю"""
@@ -44,10 +56,12 @@ class LessonCreateAPIView(CreateAPIView):
         """Привязка урока к авторизованному пользователю"""
         serializer.save(owner=self.request.user)
 
+
 class LessonListAPIView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     pagination_class = CustomPagination
+
 
 class LessonRetrieveAPIView(RetrieveAPIView):
     queryset = Lesson.objects.all()
@@ -84,4 +98,3 @@ class SubscriptionAPIView(APIView):
             message = "Подписка добавлена."
 
         return Response({"message": message})
-
