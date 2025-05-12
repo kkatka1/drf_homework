@@ -1,15 +1,16 @@
 import os.path
+import os
 from datetime import timedelta
 from pathlib import Path
 
+from django.core.mail.backends import smtp
 from django.template.context_processors import media
 from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-dot_env = os.path.join(BASE_DIR, ".env")
-load_dotenv(dotenv_path=dot_env)
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -30,6 +31,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "users",
     "materials",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -66,7 +68,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    # "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated",],
+    #"DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated",],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
 }
 
@@ -121,3 +123,30 @@ SIMPLE_JWT = {
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+CELERY_BEAT_SCHEDULE = {
+    "block_user": {
+        "task": "materials.tasks.block_user",
+        "schedule": timedelta(seconds=10),
+    },
+}
+
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 465))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False") == "True"
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "True") == "True"
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

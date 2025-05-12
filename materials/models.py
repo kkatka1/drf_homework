@@ -26,6 +26,8 @@ class Course(models.Model):
         help_text="Укажите владельца курса",
     )
 
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"

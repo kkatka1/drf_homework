@@ -17,6 +17,7 @@ from materials.models import Course, Lesson, Subscription
 from materials.paginations import CustomPagination
 from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModer, IsOwner
+from materials.tasks import subscription_message
 
 @method_decorator(
     name="list",
@@ -45,6 +46,13 @@ class CourseViewSet(ModelViewSet):
         elif self.action == "destroy":
             self.permission_classes = (~IsModer | IsOwner,)
         return super().get_permissions()
+
+    def perform_update(self, serializer):
+        update_course = serializer.save()
+        subscriptions = Subscription.objects.filter(course=update_course)
+        for subscription in subscriptions:
+            subscription_message.delay(update_course.title, subscription.user.email)
+
 
 
 class LessonCreateAPIView(CreateAPIView):
