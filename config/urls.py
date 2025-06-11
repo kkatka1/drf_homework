@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import include, path
+from django.http import HttpResponse
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -20,6 +21,7 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path("", lambda request: HttpResponse("✅ Главная страница работает!")),
     path("admin/", admin.site.urls),
     path("materials/", include("materials.urls", namespace="materials")),
     path("users/", include("users.urls", namespace="users")),
@@ -34,3 +36,4 @@ urlpatterns = [
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 
 ]
+
