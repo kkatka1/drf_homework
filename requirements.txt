@@ -17,10 +17,16 @@ django-filter==25.1
 django-timezone-field==7.1
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
+dnspython==2.7.0
 drf-yasg==1.21.10
+eventlet==0.40.0
+flake8==7.2.0
+greenlet==3.2.3
+gunicorn==23.0.0
 idna==3.10
 inflection==0.5.1
 kombu==5.5.3
+mccabe==0.7.0
 mypy-extensions==1.0.0
 packaging==24.2
 pathspec==0.12.1
@@ -28,6 +34,8 @@ pillow==11.2.1
 platformdirs==4.3.7
 prompt_toolkit==3.0.51
 psycopg2-binary==2.9.10
+pycodestyle==2.13.0
+pyflakes==3.3.2
 PyJWT==2.9.0
 python-crontab==3.2.0
 python-dateutil==2.9.0.post0

@@ -32,5 +32,3 @@ def create_stripe_checkout_sessions(price):
         mode="payment",
     )
     return session.get("id"), session.get("url")
-
-
