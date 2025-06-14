@@ -125,3 +125,9 @@ poetry.toml
 pyrightconfig.json
 
 .idea/
+
+.env
+.env.*
+*.sqlite3
+*.log
+staticfiles/
