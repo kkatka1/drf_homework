@@ -1,0 +1,17 @@
+[flake8]
+exclude =
+    .git,
+    __pycache__,
+    env,
+    venv,
+    migrations,
+    .github,
+    *.yml,
+    *.yaml
+max-line-length = 120
+ignore =
+    E128,
+    E501,
+    F405,
+    F403,
+    F401
