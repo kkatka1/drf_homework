@@ -43,7 +43,7 @@ class Command(BaseCommand):
             )
         )
 
-        payment_2 = Payment.objects.create(
+        _ = Payment.objects.create(
             user=user,
             payment_date=date.today(),
             course_id=2,

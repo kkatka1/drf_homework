@@ -12,12 +12,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-
 from materials.models import Course, Lesson, Subscription
 from materials.paginations import CustomPagination
 from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModer, IsOwner
 from materials.tasks import subscription_message
+
 
 @method_decorator(
     name="list",
@@ -25,8 +25,6 @@ from materials.tasks import subscription_message
         operation_description="description from swagger_auto_schema via method_decorator"
     ),
 )
-
-
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
@@ -52,7 +50,6 @@ class CourseViewSet(ModelViewSet):
         subscriptions = Subscription.objects.filter(course=update_course)
         for subscription in subscriptions:
             subscription_message.delay(update_course.title, subscription.user.email)
-
 
 
 class LessonCreateAPIView(CreateAPIView):
@@ -93,7 +90,7 @@ class SubscriptionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        user = request.user
+        _ = request.user
         course_id = request.data.get("course_id")
         course = get_object_or_404(Course, id=course_id)
         subs_item = Subscription.objects.filter(user=request.user, course=course)
