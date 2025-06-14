@@ -73,9 +73,9 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd /var/www/myapp
-          git pull origin main
-          docker compose pull
-          docker compose down
-          docker compose up -d --build
+          cd /var/www/myapp || exit 1
+          git reset --hard origin/main  # Принудительная синхронизация с origin/main
+          docker compose --env-file /var/www/myapp/.env pull
+          docker compose --env-file /var/www/myapp/.env down
+          docker compose --env-file /var/www/myapp/.env up -d --build
           EOF
